@@ -2,6 +2,7 @@ package com.example.facebooktest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -26,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.androidfacebooka",                  //Insert your own package name.
+                    "com.example.facebooktest",                  //Insert your own package name.
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
@@ -53,20 +54,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-                Toast.makeText(MainActivity.this, "Si Funciono", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Si Funciona", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this, MainMenu.class);
+                startActivity(intent);
             }
 
             @Override
             public void onCancel() {
                 // App code
+                Toast.makeText(MainActivity.this, "Accion Cancelada", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Toast.makeText(MainActivity.this, "No Funciono", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Se Produjo un ERROR", Toast.LENGTH_LONG).show();
             }
         });
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
